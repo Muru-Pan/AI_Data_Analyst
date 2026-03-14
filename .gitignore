@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+.env.local
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Backup and original files
+*.orig
+archive/
+fix.py
+fix2.py
+fix_style.py
+restore.py
+
+# Data files (optional, but good practice if large)
+data/*.csv
+data/*.xlsx

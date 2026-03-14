@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Data Analyst Report — {{ dataset_name }}</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    :root {
+      --bg: #0e1117;
+      --card: #1c2130;
+      --border: #2d3650;
+      --text: #e0e6f0;
+      --muted: #7d8fa6;
+      --accent: #636EFA;
+      --green: #00CC96;
+      --red: #EF553B;
+      --yellow: #FFA15A;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', sans-serif; padding: 2rem; }
+
+    .report-header { text-align: center; padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    .report-header h1 { font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
+    .report-header p { color: var(--muted); font-size: 0.9rem; }
+
+    .section { margin-bottom: 2.5rem; }
+    .section-title { font-size: 1.2rem; font-weight: 600; color: var(--accent); margin-bottom: 1rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; text-align: center; }
+    .stat-card .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+    .stat-card .value { font-size: 1.6rem; font-weight: 700; color: var(--text); }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
+    .kpi-card .kpi-name { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
+    .kpi-card .kpi-total { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+    .kpi-card .kpi-meta { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+    .kpi-card .growth-pos { color: var(--green); font-weight: 600; }
+    .kpi-card .growth-neg { color: var(--red); font-weight: 600; }
+
+    .insight-card { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 0.8rem; }
+    .insight-card.high { border-left-color: var(--red); }
+    .insight-card.medium { border-left-color: var(--yellow); }
+    .insight-card.low { border-left-color: var(--green); }
+    .insight-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .insight-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.3rem; }
+    .insight-card .action { font-size: 0.82rem; color: var(--accent); font-style: italic; }
+    .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 0.1rem 0.5rem; border-radius: 4px; margin-bottom: 0.4rem; }
+    .badge.high { background: rgba(239,85,59,0.2); color: var(--red); }
+    .badge.medium { background: rgba(255,161,90,0.2); color: var(--yellow); }
+    .badge.low { background: rgba(0,204,150,0.2); color: var(--green); }
+
+    .chart-container { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; margin-bottom: 1.5rem; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th { background: var(--border); color: var(--muted); padding: 0.6rem 0.8rem; text-align: left; font-weight: 600; }
+    td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: rgba(99,110,250,0.08); }
+
+    .footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+<div class="report-header">
+  <h1>📊 AI Data Analyst Report</h1>
+  <p>Dataset: <strong>{{ dataset_name }}</strong> &nbsp;|&nbsp; Generated: {{ generated_at }}</p>
+</div>
+
+<!-- Dataset Overview -->
+<div class="section">
+  <div class="section-title">📁 Dataset Overview</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="label">Rows</div>
+      <div class="value">{{ "{:,}".format(shape[0]) }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Columns</div>
+      <div class="value">{{ shape[1] }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Missing Values</div>
+      <div class="value">{{ "{:,}".format(total_nulls) }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Null %</div>
+      <div class="value">{{ null_pct }}%</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Numeric Cols</div>
+      <div class="value">{{ column_types.numeric | length }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Categorical Cols</div>
+      <div class="value">{{ column_types.categorical | length }}</div>
+    </div>
+    {% if column_types.datetime %}
+    <div class="stat-card">
+      <div class="label">Date Cols</div>
+      <div class="value">{{ column_types.datetime | length }}</div>
+    </div>
+    {% endif %}
+    <div class="stat-card">
+      <div class="label">Anomalies Found</div>
+      <div class="value" style="color: var(--red);">{{ anomaly_count }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- KPI Dashboard -->
+{% if kpi_cards %}
+<div class="section">
+  <div class="section-title">🎯 Key Performance Indicators</div>
+  <div class="kpi-grid">
+    {% for kpi in kpi_cards %}
+    <div class="kpi-card">
+      <div class="kpi-name">{{ kpi.name }}</div>
+      <div class="kpi-total">{{ "{:,.2f}".format(kpi.total) }}</div>
+      <div class="kpi-meta">
+        Avg: {{ "{:,.2f}".format(kpi.mean) }} &nbsp;|&nbsp;
+        Count: {{ "{:,}".format(kpi.count) }}<br>
+        {% if kpi.growth_str != "N/A" %}
+          Growth:
+          {% if kpi.growth_pct and kpi.growth_pct > 0 %}
+            <span class="growth-pos">{{ kpi.growth_str }}</span>
+          {% elif kpi.growth_pct and kpi.growth_pct < 0 %}
+            <span class="growth-neg">{{ kpi.growth_str }}</span>
+          {% else %}
+            {{ kpi.growth_str }}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- AI Insights -->
+{% if insights %}
+<div class="section">
+  <div class="section-title">🤖 AI-Generated Insights & Recommendations</div>
+  {% for item in insights %}
+  <div class="insight-card {{ item.severity }}">
+    <span class="badge {{ item.severity }}">{{ item.severity }} priority</span>
+    <h4>{{ item.title }}</h4>
+    <p>{{ item.insight }}</p>
+    <div class="action">💡 {{ item.action }}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Anomaly Summary -->
+{% if anomaly_summary %}
+<div class="section">
+  <div class="section-title">🚨 Anomaly Detection Summary</div>
+  <table>
+    <thead>
+      <tr><th>Column</th><th>IQR Outliers</th><th>Z-Score Outliers</th></tr>
+    </thead>
+    <tbody>
+      {% for col, stats in anomaly_summary.items() %}
+      <tr>
+        <td>{{ col }}</td>
+        <td>{{ stats.iqr_outliers }}</td>
+        <td>{{ stats.zscore_outliers }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<!-- Charts -->
+{% if chart_htmls %}
+<div class="section">
+  <div class="section-title">📈 Visualizations</div>
+  {% for chart_html in chart_htmls %}
+  <div class="chart-container">
+    {{ chart_html | safe }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="footer">
+  Generated by <strong>AI Data Analyst</strong> &nbsp;•&nbsp; Powered by Groq LLaMA3 &nbsp;•&nbsp; {{ generated_at }}
+</div>
+
+</body>
+</html>
