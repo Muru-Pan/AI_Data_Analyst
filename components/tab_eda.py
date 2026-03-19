@@ -35,7 +35,7 @@ def render_tab_eda(df):
                     "Max": s["max"], "Skewness": s["skewness"], "Kurtosis": s["kurtosis"],
                     "Nulls": s["null_count"],
                 })
-            st.dataframe(pd.DataFrame(stats_list), width="stretch")
+            st.dataframe(pd.DataFrame(stats_list), width='stretch')
 
             st.markdown("#### Distribution Explorer")
             num_col = st.selectbox("Select column for histogram", col_types.get("numeric", []))
@@ -48,6 +48,6 @@ def render_tab_eda(df):
             for col, info in eda["categorical_summary"].items():
                 with st.expander(f"`{col}` — {info['unique_count']} unique values"):
                     vc_df = pd.DataFrame(info["top_values"].items(), columns=["Value", "Count"])
-                    st.dataframe(vc_df, width="stretch")
+                    st.dataframe(vc_df, width='stretch')
     else:
         st.info("Click `Run EDA` to generate analysis.")

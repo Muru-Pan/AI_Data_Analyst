@@ -26,7 +26,7 @@ def render_tab_anomalies(df):
             st.markdown("#### Summary by Column")
             sum_df = pd.DataFrame(anom_res["summary"]).T.reset_index()
             sum_df.columns = ["Column", "IQR Outliers", "Z-Score Outliers"]
-            st.dataframe(sum_df, width="stretch")
+            st.dataframe(sum_df, width='stretch')
 
         # Anomaly scatter charts per column
         numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
@@ -45,6 +45,6 @@ def render_tab_anomalies(df):
             st.markdown("#### Flagged Rows (sample)")
             display_cols = [c for c in df.columns if c in anom_res["anomaly_rows"].columns]
             if display_cols:
-                st.dataframe(anom_res["anomaly_rows"][display_cols].head(50), width="stretch")
+                st.dataframe(anom_res["anomaly_rows"][display_cols].head(50), width='stretch')
     else:
         st.info("Click `Detect Anomalies` to identify outliers.")

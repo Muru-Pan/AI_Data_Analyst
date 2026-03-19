@@ -31,7 +31,7 @@ def render_tab_kpis(df):
 
         st.markdown("#### KPI Details")
         kpi_df = pd.DataFrame(kpis)
-        st.dataframe(kpi_df, width="stretch")
+        st.dataframe(kpi_df, width='stretch')
 
         # Trend analysis for KPI columns
         if date_cols:

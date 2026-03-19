@@ -44,7 +44,6 @@ def compute_feature_importance(df: pd.DataFrame, target_col: str) -> dict:
     Returns a dict of {feature: importance_score}.
     """
     from sklearn.ensemble import RandomForestRegressor
-    from sklearn.preprocessing import LabelEncoder
 
     numeric_df = df.select_dtypes(include=np.number).copy()
 

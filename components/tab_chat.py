@@ -42,7 +42,7 @@ def render_tab_chat(df):
         ]
         sug_cols = st.columns(len(suggestions))
         for i, sug in enumerate(suggestions):
-            if sug_cols[i].button(sug, key=f"sug_{i}", width="stretch"):
+            if sug_cols[i].button(sug, key=f"sug_{i}", width='stretch'):
                 st.session_state["_pending_question"] = sug
                 st.rerun()
 
@@ -70,24 +70,24 @@ def render_tab_chat(df):
                         with st.expander("🔍 View Generated Code"):
                             st.code(pcode, language="python")
                     if isinstance(rval, pd.DataFrame) and not rval.empty:
-                        st.dataframe(rval, width="stretch")
+                        st.dataframe(rval, width='stretch')
                         nr = rval.select_dtypes(include=np.number).columns.tolist()
                         sr = rval.select_dtypes(include="object").columns.tolist()
                         if csug != "none" and nr and sr:
                             try:
                                 ck = f"chat_chart_{idx}"
                                 if csug == "bar":
-                                    st.plotly_chart(bar_chart(rval, sr[0], nr[0]), width="stretch", key=ck)
+                                    st.plotly_chart(bar_chart(rval, sr[0], nr[0]), width='stretch', key=ck)
                                 elif csug == "pie":
-                                    st.plotly_chart(pie_chart(rval, sr[0], nr[0]), width="stretch", key=ck)
+                                    st.plotly_chart(pie_chart(rval, sr[0], nr[0]), width='stretch', key=ck)
                                 elif csug == "line":
-                                    st.plotly_chart(line_chart(rval, sr[0], nr[0]), width="stretch", key=ck)
+                                    st.plotly_chart(line_chart(rval, sr[0], nr[0]), width='stretch', key=ck)
                                 elif csug == "scatter" and len(nr) >= 2:
-                                    st.plotly_chart(scatter_plot(rval, nr[0], nr[1]), width="stretch", key=ck)
+                                    st.plotly_chart(scatter_plot(rval, nr[0], nr[1]), width='stretch', key=ck)
                             except Exception:
                                 pass
                     elif isinstance(rval, pd.Series):
-                        st.dataframe(rval.to_frame(), width="stretch")
+                        st.dataframe(rval.to_frame(), width='stretch')
                     elif rval is not None:
                         st.success(f"**Result:** {rval}")
                     if explanation:

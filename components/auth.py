@@ -14,7 +14,7 @@ def render_auth():
             l_user = st.text_input("u", placeholder="Email ID", label_visibility="collapsed")
             l_pass = st.text_input("p", type="password", placeholder="Password", label_visibility="collapsed")
             st.markdown('<div class="lp-forgot">Forgot Password?</div>', unsafe_allow_html=True)
-            submitted = st.form_submit_button("Login", use_container_width=True)
+            submitted = st.form_submit_button("Login", width='stretch')
             st.markdown('<div class="lp-register">Don\'t have an account? <strong>Register</strong></div>', unsafe_allow_html=True)
             if submitted:
                 if not l_user or not l_pass:
@@ -32,7 +32,7 @@ def render_auth():
             s_user  = st.text_input("un", placeholder="Username", label_visibility="collapsed")
             s_pass  = st.text_input("pw", type="password", placeholder="Password", label_visibility="collapsed")
             s_pass2 = st.text_input("pw2", type="password", placeholder="Confirm Password", label_visibility="collapsed")
-            reg_sub = st.form_submit_button("Create Account", use_container_width=True)
+            reg_sub = st.form_submit_button("Create Account", width='stretch')
             if reg_sub:
                 if s_pass != s_pass2:
                     st.error("Passwords do not match.")

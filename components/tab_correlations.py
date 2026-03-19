@@ -27,7 +27,7 @@ def render_tab_correlations(df):
             st.markdown("#### Top Correlated Pairs")
             pairs_df = pd.DataFrame(corr_res["top_pairs"])
             if not pairs_df.empty:
-                st.dataframe(pairs_df, width="stretch")
+                st.dataframe(pairs_df, width='stretch')
 
         # Feature importance
         st.markdown("---")
@@ -41,4 +41,4 @@ def render_tab_correlations(df):
             else:
                 imp_df = pd.DataFrame(importance.items(), columns=["Feature", "Importance"])
                 st.plotly_chart(bar_chart(imp_df, "Feature", "Importance"), width='stretch', key="corr_importance_bar")
-                st.dataframe(imp_df, width="stretch")
+                st.dataframe(imp_df, width='stretch')

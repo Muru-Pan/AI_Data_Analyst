@@ -4,7 +4,6 @@ insight_generator.py — AI-powered business insights via Groq LLaMA3.
 
 import os
 import json
-import pandas as pd
 from dotenv import load_dotenv
 
 load_dotenv()

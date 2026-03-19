@@ -20,7 +20,7 @@ def render_tab_overview(df, df_raw):
         "Unique Values": [df[c].nunique() for c in df.columns],
         "Sample Value": [str(df[c].dropna().iloc[0]) if df[c].notnull().any() else "N/A" for c in df.columns],
     })
-    st.dataframe(schema_df, width="stretch")
+    st.dataframe(schema_df, width='stretch')
 
     st.markdown("#### 🔧 Data Cleaning")
     col_a, col_b = st.columns([2, 1])
@@ -32,7 +32,7 @@ def render_tab_overview(df, df_raw):
         )
     with col_b:
         st.markdown("<br>", unsafe_allow_html=True)
-        run_clean = st.button("🧹 Clean Dataset", width="stretch")
+        run_clean = st.button("🧹 Clean Dataset", width='stretch')
 
     if run_clean:
         with st.spinner("Cleaning dataset..."):
@@ -54,7 +54,7 @@ def render_tab_overview(df, df_raw):
             if report.get("null_counts"):
                 st.markdown("**Remaining nulls per column:**")
                 null_df = pd.DataFrame(report["null_counts"].items(), columns=["Column", "Null Count"])
-                st.dataframe(null_df, width="stretch")
+                st.dataframe(null_df, width='stretch')
 
     st.markdown("#### Preview (first 50 rows)")
-    st.dataframe(df.head(50), width="stretch")
+    st.dataframe(df.head(50), width='stretch')

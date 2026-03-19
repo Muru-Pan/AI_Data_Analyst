@@ -4,7 +4,6 @@ eda_engine.py — Automated Exploratory Data Analysis engine.
 
 import pandas as pd
 import numpy as np
-from scipy import stats
 
 
 def run_eda(df: pd.DataFrame) -> dict:
